@@ -1,9 +1,9 @@
 console.log("I get called from api.js!");
 
-const HitAPI = (() => {
+export const HitAPI = (() => {
   const processData = (data) => {
     const processedData = {
-      allData: data,
+      // allData: data,
       city: data.location.name,
       region: data.location.region,
       country: data.location.country,
@@ -45,7 +45,7 @@ const HitAPI = (() => {
   };
 })();
 
-const Utils = (() => {
+export const Utils = (() => {
   let isFahrenheit = false;
 
   const toggleUnit = (temperature) => {

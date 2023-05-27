@@ -1,17 +1,21 @@
 console.log("I get called from api.js!");
 
-// TO DO:
-// 1. More data properties in processData
-// 2. Plan interface
-// 3. Change name of module to appLogic? If not too much code here
-// 4. Start building interface
-
 const HitAPI = (() => {
   const processData = (data) => {
     const processedData = {
-      temperature: data.current.temp_c,
-      humidity: data.current.humidity,
+      allData: data,
+      city: data.location.name,
+      region: data.location.region,
+      country: data.location.country,
+      localTime: data.location.localtime,
+      weatherIcon: data.current.condition.icon,
       weather: data.current.condition.text,
+      temperature: data.current.temp_c,
+      feelsLike: data.current.feelslike_c,
+      humidity: data.current.humidity,
+      windSpeed: data.current.wind_kph,
+      windDirection: data.current.wind_dir,
+      visibility: data.current.vis_km,
       isDay: data.current.is_day === 1,
     };
     return processedData;
@@ -129,9 +133,9 @@ const Utils = (() => {
   }
 })();
 
-let temperature = 25;
-console.log(`Temperature in Celsius: ${temperature}`);
-temperature = Utils.toggleUnit(temperature);
-console.log(`Temperature in Fahrenheit: ${temperature}`);
-temperature = Utils.toggleUnit(temperature);
-console.log(`Temperature in Celsius: ${temperature}`);
+// let temperature = 25;
+// console.log(`Temperature in Celsius: ${temperature}`);
+// temperature = Utils.toggleUnit(temperature);
+// console.log(`Temperature in Fahrenheit: ${temperature}`);
+// temperature = Utils.toggleUnit(temperature);
+// console.log(`Temperature in Celsius: ${temperature}`);

@@ -1,7 +1,7 @@
 console.log("I get called from api.js!");
 
 // TO DO:
-// 1. Method for changing background based on weather
+// 1. More data properties in processData
 // 2. Plan interface
 // 3. Change name of module to appLogic? If not too much code here
 // 4. Start building interface
@@ -11,6 +11,8 @@ const HitAPI = (() => {
     const processedData = {
       temperature: data.current.temp_c,
       humidity: data.current.humidity,
+      weather: data.current.condition.text,
+      isDay: data.current.is_day === 1,
     };
     return processedData;
   };
@@ -54,16 +56,74 @@ const Utils = (() => {
     return convertedTemp;
   };
 
+  const switchBackground = (finalData) => {
+    const { isDay, weather } = finalData;
+    let backgroundUrl;
+
+    if (isDay) {
+      switch (weather) {
+        case "Sunny":
+          backgroundUrl = "sunny-day-background.jpg";
+          break;
+        case "Clear":
+          backgroundUrl = "clear-day-background.jpg";
+          break;
+        case "Cloud":
+        case "Partly cloudy":
+          backgroundUrl = "cloudy-day-background.jpg";
+          break;
+        case "Rain":
+          backgroundUrl = "rainy-day-background.jpg";
+          break;
+        case "Snow":
+          backgroundUrl = "snowy-day-background.jpg";
+          break;
+        case "Fog":
+          backgroundUrl = "foggy-day-background.jpg";
+          break;
+        default:
+          backgroundUrl = "default-day-background.jpg";
+          break;
+      }
+    } else {
+      switch (weather) {
+        case "Clear":
+          backgroundUrl = "clear-night-background.jpg";
+          break;
+        case "Cloud":
+        case "Partly cloudy":
+          backgroundUrl = "cloudy-night-background.jpg";
+          break;
+        case "Rain":
+          backgroundUrl = "rainy-night-background.jpg";
+          break;
+        case "Snow":
+          backgroundUrl = "snowy-night-background.jpg";
+          break;
+        case "Fog":
+          backgroundUrl = "foggy-night-background.jpg";
+          break;
+        default:
+          backgroundUrl = "default-night-background.jpg";
+          break;
+      }
+    }
+
+    console.log("Background URL:", backgroundUrl);
+  };
+
   return {
     toggleUnit,
+    switchBackground,
   };
 })();
 
 // Usage with error handling
 (async () => {
   try {
-    const weatherData = await HitAPI.getWeatherByLocation("Stockholm");
+    const weatherData = await HitAPI.getWeatherByLocation("stockholm");
     console.log(weatherData);
+    Utils.switchBackground(weatherData);
   } catch (error) {
     console.error("Error occurred during weather retrieval:", error);
   }

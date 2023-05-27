@@ -5,8 +5,6 @@ export const HitAPI = (() => {
     const processedData = {
       // allData: data,
       city: data.location.name,
-      region: data.location.region,
-      country: data.location.country,
       localTime: data.location.localtime,
       weatherIcon: data.current.condition.icon,
       weather: data.current.condition.text,
@@ -48,16 +46,16 @@ export const HitAPI = (() => {
 export const Utils = (() => {
   let isFahrenheit = false;
 
-  const toggleUnit = (temperature) => {
-    let convertedTemp = temperature;
-    if (isFahrenheit) {
-      convertedTemp = ((temperature - 32) * 5) / 9;
-    } else {
-      convertedTemp = (temperature * 9) / 5 + 32;
-    }
+  const toggleUnit = (values) => {
+    const convertedValues = values.map((value) => {
+      if (isFahrenheit) {
+        return ((value - 32) * 5) / 9;
+      }
+      return (value * 9) / 5 + 32;
+    });
 
     isFahrenheit = !isFahrenheit;
-    return convertedTemp;
+    return convertedValues;
   };
 
   const switchBackground = (finalData) => {
@@ -133,9 +131,17 @@ export const Utils = (() => {
   }
 })();
 
-// let temperature = 25;
-// console.log(`Temperature in Celsius: ${temperature}`);
-// temperature = Utils.toggleUnit(temperature);
-// console.log(`Temperature in Fahrenheit: ${temperature}`);
-// temperature = Utils.toggleUnit(temperature);
-// console.log(`Temperature in Celsius: ${temperature}`);
+let temperature = [25];
+let feelsLike = [25];
+
+console.log(`Temperature in Celsius: ${temperature}`);
+temperature = Utils.toggleUnit(temperature);
+console.log(`Temperature in Fahrenheit: ${temperature}`);
+temperature = Utils.toggleUnit(temperature);
+console.log(`Temperature in Celsius: ${temperature}`);
+
+console.log(`Feels Like in Celsius: ${feelsLike}`);
+feelsLike = Utils.toggleUnit(feelsLike);
+console.log(`Feels Like in Fahrenheit: ${feelsLike}`);
+feelsLike = Utils.toggleUnit(feelsLike);
+console.log(`Feels Like in Celsius: ${feelsLike}`);

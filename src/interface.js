@@ -5,14 +5,15 @@ console.log("this seem to be working");
 
 const DOMStuff = (() => {
   const searchInput = document.querySelector("#searchLocation");
-  const searchButton = document.querySelector("button");
+  const searchButton = document.querySelector("#searchBtn");
+  const toggleButton = document.querySelector("#toggleBtn");
   const dataContainer = document.querySelector("#dataContainer");
+
+  const isFahrenheit = false; // Global variable for temperature units
 
   const renderData = (weatherData) => {
     const {
       city,
-      region,
-      country,
       localTime,
       weatherIcon,
       weather,
@@ -30,11 +31,12 @@ const DOMStuff = (() => {
     }
 
     const heading = document.createElement("h2");
-    heading.textContent = `${city}, ${region}, ${country}`;
+    heading.textContent = city;
     dataContainer.appendChild(heading);
 
     const localTimePara = document.createElement("p");
-    localTimePara.textContent = `Local Time: ${localTime}`;
+    const time = localTime.split(" ")[1]; // Extract the time portion
+    localTimePara.textContent = time;
     dataContainer.appendChild(localTimePara);
 
     const weatherIconImg = document.createElement("img");
@@ -48,10 +50,12 @@ const DOMStuff = (() => {
 
     const temperaturePara = document.createElement("p");
     temperaturePara.textContent = `Temperature: ${temperature}°C`;
+    temperaturePara.classList.add("temperature"); // Add class for temperature
     dataContainer.appendChild(temperaturePara);
 
     const feelsLikePara = document.createElement("p");
     feelsLikePara.textContent = `Feels Like: ${feelsLike}°C`;
+    feelsLikePara.classList.add("feels-like"); // Add class for feels like
     dataContainer.appendChild(feelsLikePara);
 
     const humidityPara = document.createElement("p");
@@ -82,6 +86,25 @@ const DOMStuff = (() => {
     }
   };
 
+  const toggleUnits = () => {
+    const temperatureElements = document.querySelectorAll(".temperature");
+    const feelsLikeElements = document.querySelectorAll(".feels-like");
+
+    temperatureElements.forEach((element) => {
+      const currentTemperature = parseInt(element.textContent);
+      const convertedTemperature = Utils.toggleUnit(currentTemperature);
+      element.textContent = `${convertedTemperature}°${
+        isFahrenheit ? "F" : "C"
+      }`;
+    });
+
+    feelsLikeElements.forEach((element) => {
+      const currentFeelsLike = parseInt(element.textContent);
+      const convertedFeelsLike = Utils.toggleUnit(currentFeelsLike);
+      element.textContent = `${convertedFeelsLike}°${isFahrenheit ? "F" : "C"}`;
+    });
+  };
+
   const init = () => {
     searchButton.addEventListener("click", handleSearch);
     searchInput.addEventListener("keydown", (event) => {
@@ -89,11 +112,16 @@ const DOMStuff = (() => {
         handleSearch(event);
       }
     });
+
+    toggleButton.addEventListener("click", () => {
+      toggleUnits();
+    });
   };
 
   return {
     init,
     renderData,
+    toggleUnits,
   };
 })();
 

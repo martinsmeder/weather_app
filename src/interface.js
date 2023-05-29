@@ -1,13 +1,14 @@
 // eslint-disable-next-line import/extensions, no-unused-vars
-import { HitAPI, Utils } from "./api.js";
+import { WeatherAPI, GiphyAPI, Utils } from "./appLogic.js";
 
-console.log("this seem to be working");
+console.log("this seem to be working (interface.js)");
 
 const DOMStuff = (() => {
   const searchInput = document.querySelector("#searchLocation");
   const searchButton = document.querySelector("#searchBtn");
   const toggleButton = document.querySelector("#toggleBtn");
   const dataContainer = document.querySelector("#dataContainer");
+  const weatherGif = document.querySelector("#weatherGif");
 
   let weatherData = null;
   let useCelsiusTemp = true;
@@ -91,10 +92,31 @@ const DOMStuff = (() => {
     event.preventDefault();
     const location = searchInput.value;
     try {
-      weatherData = await HitAPI.getWeatherByLocation(location);
+      // Render data
+      weatherData = await WeatherAPI.getWeatherByLocation(location);
+      renderData(true);
+      // Change background
+      const backgroundImageUrl = Utils.switchBackground(weatherData);
+      document.body.style.backgroundImage = `url(${backgroundImageUrl})`;
+      // Change gif
+      const gifId = await Utils.setGifId(weatherData);
+      const gifUrl = await GiphyAPI.getGifById(gifId);
+      weatherGif.src = gifUrl;
+    } catch (error) {
+      console.error("Error occurred during weather retrieval:", error);
+    }
+  };
+
+  const setDefaultCity = async () => {
+    const defaultCity = "new york";
+    try {
+      weatherData = await WeatherAPI.getWeatherByLocation(defaultCity);
       renderData(true);
       const backgroundImageUrl = Utils.switchBackground(weatherData);
       document.body.style.backgroundImage = `url(${backgroundImageUrl})`;
+      const gifId = await Utils.setGifId(weatherData);
+      const gifUrl = await GiphyAPI.getGifById(gifId);
+      weatherGif.src = gifUrl;
     } catch (error) {
       console.error("Error occurred during weather retrieval:", error);
     }
@@ -114,11 +136,13 @@ const DOMStuff = (() => {
       renderData();
       toggleButton.textContent = useCelsiusTemp ? "Celsius" : "Fahrenheit";
     });
+
+    setDefaultCity();
   };
 
   return {
-    init,
     renderData,
+    init,
   };
 })();
 

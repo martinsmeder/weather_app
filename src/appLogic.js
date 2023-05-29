@@ -1,6 +1,6 @@
-console.log("I get called from api.js!");
+console.log("this seem to be working (appLogic.js)");
 
-export const HitAPI = (() => {
+export const WeatherAPI = (() => {
   const processData = (data) => {
     const processedData = {
       // allData: data,
@@ -45,6 +45,35 @@ export const HitAPI = (() => {
   };
 })();
 
+export const GiphyAPI = (() => {
+  const processGifData = (data) => {
+    const gifUrl = data.data.images.original.url;
+    return gifUrl;
+  };
+
+  const getGifById = async (gifId) => {
+    const apiKey = "8ewGe5vteIERFUPE6ZbcFuqh7mCIUIzY";
+    const url = `https://api.giphy.com/v1/gifs/${gifId}?api_key=${apiKey}`;
+
+    try {
+      const response = await fetch(url, { mode: "cors" });
+      if (!response.ok) {
+        throw new Error("Unable to fetch GIF data.");
+      } else {
+        const data = await response.json();
+        const gifUrl = processGifData(data);
+        return gifUrl;
+      }
+    } catch (error) {
+      console.error("An error occurred:", error.message);
+      throw error;
+    }
+  };
+  return {
+    getGifById,
+  };
+})();
+
 export const Utils = (() => {
   const switchBackground = (finalData) => {
     const { isDay, weather } = finalData;
@@ -77,22 +106,36 @@ export const Utils = (() => {
     } else {
       backgroundUrl = "images/default_night.jpg";
     }
-    console.log("Background URL:", backgroundUrl);
     return backgroundUrl;
+  };
+
+  const setGifId = (finalData) => {
+    const { isDay, weather } = finalData;
+    let gifId;
+
+    if (isDay) {
+      if (weather.toLowerCase().includes("sun")) {
+        gifId = "3cB7aOM6347PW";
+      } else if (weather.toLowerCase().includes("cloud")) {
+        gifId = "l0HlQdk8kI9KIOjBe";
+      } else if (weather.toLowerCase().includes("rain")) {
+        gifId = "0opZPb9yugNFEd3kFQ";
+      } else if (weather.toLowerCase().includes("snow")) {
+        gifId = "9jvjuSSkMOYTyQfJji";
+      } else if (weather.toLowerCase().includes("fog")) {
+        gifId = "4CNT8NqboKa2UGpzhW";
+      } else {
+        gifId = "fGs29ohKkNKwV4xxKW";
+      }
+    } else {
+      gifId = "fGs29ohKkNKwV4xxKW";
+    }
+
+    return gifId;
   };
 
   return {
     switchBackground,
+    setGifId,
   };
-})();
-
-// Usage with error handling
-(async () => {
-  try {
-    const weatherData = await HitAPI.getWeatherByLocation("stockholm");
-    console.log(weatherData);
-    Utils.switchBackground(weatherData);
-  } catch (error) {
-    console.error("Error occurred during weather retrieval:", error);
-  }
 })();

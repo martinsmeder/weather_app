@@ -8,8 +8,10 @@ export const HitAPI = (() => {
       localTime: data.location.localtime,
       weatherIcon: data.current.condition.icon,
       weather: data.current.condition.text,
-      temperature: data.current.temp_c,
-      feelsLike: data.current.feelslike_c,
+      temperatureC: data.current.temp_c,
+      temperatureF: data.current.temp_f,
+      feelsLikeC: data.current.feelslike_c,
+      feelsLikeF: data.current.feelslike_f,
       humidity: data.current.humidity,
       windSpeed: data.current.wind_kph,
       windDirection: data.current.wind_dir,
@@ -44,19 +46,36 @@ export const HitAPI = (() => {
 })();
 
 export const Utils = (() => {
-  let isFahrenheit = false;
+  // let isTemperatureFahrenheit = false;
+  // let isFeelsLikeFahrenheit = false;
 
-  const toggleUnit = (values) => {
-    const convertedValues = values.map((value) => {
-      if (isFahrenheit) {
-        return ((value - 32) * 5) / 9;
-      }
-      return (value * 9) / 5 + 32;
-    });
+  // const toggleUnits = (temperature, feelsLike) => {
+  //   let convertedTemperature;
+  //   let convertedFeelsLike;
 
-    isFahrenheit = !isFahrenheit;
-    return convertedValues;
-  };
+  //   if (isTemperatureFahrenheit) {
+  //     convertedTemperature = (temperature - 32) * (5 / 9);
+  //   } else {
+  //     convertedTemperature = (temperature * 9) / 5 + 32;
+  //   }
+
+  //   if (isFeelsLikeFahrenheit) {
+  //     convertedFeelsLike = (feelsLike - 32) * (5 / 9);
+  //   } else {
+  //     convertedFeelsLike = (feelsLike * 9) / 5 + 32;
+  //   }
+
+  //   isTemperatureFahrenheit = !isTemperatureFahrenheit;
+  //   isFeelsLikeFahrenheit = !isFeelsLikeFahrenheit;
+
+  //   console.log("Converted temperature:", convertedTemperature);
+  //   console.log("Converted feels like:", convertedFeelsLike);
+
+  //   return {
+  //     convertedTemperature,
+  //     convertedFeelsLike,
+  //   };
+  // };
 
   const switchBackground = (finalData) => {
     const { isDay, weather } = finalData;
@@ -115,7 +134,7 @@ export const Utils = (() => {
   };
 
   return {
-    toggleUnit,
+    // toggleUnits,
     switchBackground,
   };
 })();
@@ -130,18 +149,3 @@ export const Utils = (() => {
     console.error("Error occurred during weather retrieval:", error);
   }
 })();
-
-let temperature = [25];
-let feelsLike = [25];
-
-console.log(`Temperature in Celsius: ${temperature}`);
-temperature = Utils.toggleUnit(temperature);
-console.log(`Temperature in Fahrenheit: ${temperature}`);
-temperature = Utils.toggleUnit(temperature);
-console.log(`Temperature in Celsius: ${temperature}`);
-
-console.log(`Feels Like in Celsius: ${feelsLike}`);
-feelsLike = Utils.toggleUnit(feelsLike);
-console.log(`Feels Like in Fahrenheit: ${feelsLike}`);
-feelsLike = Utils.toggleUnit(feelsLike);
-console.log(`Feels Like in Celsius: ${feelsLike}`);

@@ -9,16 +9,23 @@ const DOMStuff = (() => {
   const toggleButton = document.querySelector("#toggleBtn");
   const dataContainer = document.querySelector("#dataContainer");
 
-  const isFahrenheit = false; // Global variable for temperature units
+  let weatherData = null;
+  let useCelsius = true; // Flag variable to track unit preference
 
-  const renderData = (weatherData) => {
+  const renderData = (useFeelsLikeCelsius) => {
+    if (!weatherData) {
+      return; // Exit if weatherData is null or undefined
+    }
+
     const {
       city,
       localTime,
       weatherIcon,
       weather,
-      temperature,
-      feelsLike,
+      temperatureC,
+      temperatureF,
+      feelsLikeC,
+      feelsLikeF,
       humidity,
       windSpeed,
       windDirection,
@@ -49,13 +56,17 @@ const DOMStuff = (() => {
     dataContainer.appendChild(weatherPara);
 
     const temperaturePara = document.createElement("p");
-    temperaturePara.textContent = `Temperature: ${temperature}°C`;
-    temperaturePara.classList.add("temperature"); // Add class for temperature
+    const temperatureValue = useCelsius ? temperatureC : temperatureF;
+    temperaturePara.textContent = `Temperature: ${temperatureValue}°${
+      useCelsius ? "C" : "F"
+    }`;
     dataContainer.appendChild(temperaturePara);
 
     const feelsLikePara = document.createElement("p");
-    feelsLikePara.textContent = `Feels Like: ${feelsLike}°C`;
-    feelsLikePara.classList.add("feels-like"); // Add class for feels like
+    const feelsLikeValue = useFeelsLikeCelsius ? feelsLikeC : feelsLikeF;
+    feelsLikePara.textContent = `Feels Like: ${feelsLikeValue}°${
+      useCelsius ? "C" : "F"
+    }`;
     dataContainer.appendChild(feelsLikePara);
 
     const humidityPara = document.createElement("p");
@@ -79,30 +90,11 @@ const DOMStuff = (() => {
     event.preventDefault();
     const location = searchInput.value;
     try {
-      const weatherData = await HitAPI.getWeatherByLocation(location);
-      renderData(weatherData);
+      weatherData = await HitAPI.getWeatherByLocation(location);
+      renderData(true);
     } catch (error) {
       console.error("Error occurred during weather retrieval:", error);
     }
-  };
-
-  const toggleUnits = () => {
-    const temperatureElements = document.querySelectorAll(".temperature");
-    const feelsLikeElements = document.querySelectorAll(".feels-like");
-
-    temperatureElements.forEach((element) => {
-      const currentTemperature = parseInt(element.textContent);
-      const convertedTemperature = Utils.toggleUnit(currentTemperature);
-      element.textContent = `${convertedTemperature}°${
-        isFahrenheit ? "F" : "C"
-      }`;
-    });
-
-    feelsLikeElements.forEach((element) => {
-      const currentFeelsLike = parseInt(element.textContent);
-      const convertedFeelsLike = Utils.toggleUnit(currentFeelsLike);
-      element.textContent = `${convertedFeelsLike}°${isFahrenheit ? "F" : "C"}`;
-    });
   };
 
   const init = () => {
@@ -114,41 +106,16 @@ const DOMStuff = (() => {
     });
 
     toggleButton.addEventListener("click", () => {
-      toggleUnits();
+      useCelsius = !useCelsius; // Toggle the unit preference
+      const useFeelsLikeCelsius = useCelsius; // Use the same unit preference for feels-like value
+      renderData(useFeelsLikeCelsius); // Render data with updated unit preference
     });
   };
 
   return {
     init,
     renderData,
-    toggleUnits,
   };
 })();
 
 DOMStuff.init();
-
-// // Main module for coordinating the application
-// const Controller = (() => {
-//   // Private method to handle API call and data rendering
-//   const fetchAndRender = async (location) => {
-//     try {
-//       const weatherData = await HitAPI.getWeatherByLocation(location);
-//       DOMModule.renderWeatherData(weatherData);
-//     } catch (error) {
-//       console.error("Error occurred during weather retrieval:", error);
-//       // Handle error case, show error message, etc.
-//     }
-//   };
-
-//   // Public method to initialize the application
-//   const init = () => {
-//     DOMModule.init();
-//   };
-
-//   return {
-//     init,
-//     fetchAndRender,
-//   };
-// })();
-
-// Initialize the application

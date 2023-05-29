@@ -3,18 +3,11 @@ import { WeatherAPI, GiphyAPI, Utils } from "./appLogic.js";
 
 console.log("this seem to be working (interface.js)");
 
-const DOMStuff = (() => {
-  const searchInput = document.querySelector("#searchLocation");
-  const searchButton = document.querySelector("#searchBtn");
-  const toggleButton = document.querySelector("#toggleBtn");
+const Renderer = (() => {
   const dataContainer = document.querySelector("#dataContainer");
   const weatherGif = document.querySelector("#weatherGif");
 
-  let weatherData = null;
-  let useCelsiusTemp = true;
-  let useCelsiusFeelsLike = true;
-
-  const renderData = () => {
+  const renderData = (weatherData, useCelsiusTemp, useCelsiusFeelsLike) => {
     if (!weatherData) {
       return; // Exit if weatherData is null or undefined
     }
@@ -88,35 +81,61 @@ const DOMStuff = (() => {
     dataContainer.appendChild(visibilityPara);
   };
 
+  const setGif = async (weatherData) => {
+    const gifId = await Utils.setGifId(weatherData);
+    const gifUrl = await GiphyAPI.getGifById(gifId);
+    weatherGif.src = gifUrl;
+  };
+
+  return {
+    renderData,
+    setGif,
+  };
+})();
+
+const Controller = (() => {
+  const searchInput = document.querySelector("#searchLocation");
+  const searchButton = document.querySelector("#searchBtn");
+  const toggleButton = document.querySelector("#toggleBtn");
+
+  let weatherData = null;
+  let useCelsiusTemp = true;
+  let useCelsiusFeelsLike = true;
+
   const handleSearch = async (event) => {
     event.preventDefault();
     const location = searchInput.value;
     try {
       // Render data
       weatherData = await WeatherAPI.getWeatherByLocation(location);
-      renderData(true);
+      Renderer.renderData(weatherData, useCelsiusTemp, useCelsiusFeelsLike);
+
       // Change background
       const backgroundImageUrl = Utils.switchBackground(weatherData);
       document.body.style.backgroundImage = `url(${backgroundImageUrl})`;
+
       // Change gif
-      const gifId = await Utils.setGifId(weatherData);
-      const gifUrl = await GiphyAPI.getGifById(gifId);
-      weatherGif.src = gifUrl;
+      await Renderer.setGif(weatherData);
     } catch (error) {
       console.error("Error occurred during weather retrieval:", error);
     }
+  };
+
+  const toggleTemperatureUnit = () => {
+    useCelsiusTemp = !useCelsiusTemp;
+    useCelsiusFeelsLike = !useCelsiusFeelsLike;
+    Renderer.renderData(weatherData, useCelsiusTemp, useCelsiusFeelsLike);
+    toggleButton.textContent = useCelsiusTemp ? "Celsius" : "Fahrenheit";
   };
 
   const setDefaultCity = async () => {
     const defaultCity = "new york";
     try {
       weatherData = await WeatherAPI.getWeatherByLocation(defaultCity);
-      renderData(true);
+      Renderer.renderData(weatherData, useCelsiusTemp, useCelsiusFeelsLike);
       const backgroundImageUrl = Utils.switchBackground(weatherData);
       document.body.style.backgroundImage = `url(${backgroundImageUrl})`;
-      const gifId = await Utils.setGifId(weatherData);
-      const gifUrl = await GiphyAPI.getGifById(gifId);
-      weatherGif.src = gifUrl;
+      await Renderer.setGif(weatherData);
     } catch (error) {
       console.error("Error occurred during weather retrieval:", error);
     }
@@ -130,20 +149,14 @@ const DOMStuff = (() => {
       }
     });
 
-    toggleButton.addEventListener("click", () => {
-      useCelsiusTemp = !useCelsiusTemp;
-      useCelsiusFeelsLike = !useCelsiusFeelsLike;
-      renderData();
-      toggleButton.textContent = useCelsiusTemp ? "Celsius" : "Fahrenheit";
-    });
+    toggleButton.addEventListener("click", toggleTemperatureUnit);
 
     setDefaultCity();
   };
 
   return {
-    renderData,
     init,
   };
 })();
 
-DOMStuff.init();
+Controller.init();

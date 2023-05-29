@@ -22,11 +22,11 @@ export const WeatherAPI = (() => {
   };
 
   const getWeatherByLocation = async (location) => {
+    const apiKey = "ce6acc34934c47f3916181423232305";
+    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
+
     try {
-      const response = await fetch(
-        `https://api.weatherapi.com/v1/current.json?key=ce6acc34934c47f3916181423232305&q=${location}`,
-        { mode: "cors" }
-      );
+      const response = await fetch(url, { mode: "cors" });
       if (!response.ok) {
         throw new Error("Unable to fetch weather data.");
       } else {
@@ -128,7 +128,7 @@ export const Utils = (() => {
         gifId = "fGs29ohKkNKwV4xxKW";
       }
     } else {
-      gifId = "fGs29ohKkNKwV4xxKW";
+      gifId = "dYGCU6itccVJbdyyeb";
     }
 
     return gifId;

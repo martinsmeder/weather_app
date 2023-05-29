@@ -10,9 +10,10 @@ const DOMStuff = (() => {
   const dataContainer = document.querySelector("#dataContainer");
 
   let weatherData = null;
-  let useCelsius = true; // Flag variable to track unit preference
+  let useCelsiusTemp = true;
+  let useCelsiusFeelsLike = true;
 
-  const renderData = (useFeelsLikeCelsius) => {
+  const renderData = () => {
     if (!weatherData) {
       return; // Exit if weatherData is null or undefined
     }
@@ -56,16 +57,16 @@ const DOMStuff = (() => {
     dataContainer.appendChild(weatherPara);
 
     const temperaturePara = document.createElement("p");
-    const temperatureValue = useCelsius ? temperatureC : temperatureF;
+    const temperatureValue = useCelsiusTemp ? temperatureC : temperatureF;
     temperaturePara.textContent = `Temperature: ${temperatureValue}°${
-      useCelsius ? "C" : "F"
+      useCelsiusTemp ? "C" : "F"
     }`;
     dataContainer.appendChild(temperaturePara);
 
     const feelsLikePara = document.createElement("p");
-    const feelsLikeValue = useFeelsLikeCelsius ? feelsLikeC : feelsLikeF;
+    const feelsLikeValue = useCelsiusFeelsLike ? feelsLikeC : feelsLikeF;
     feelsLikePara.textContent = `Feels Like: ${feelsLikeValue}°${
-      useCelsius ? "C" : "F"
+      useCelsiusTemp ? "C" : "F"
     }`;
     dataContainer.appendChild(feelsLikePara);
 
@@ -92,6 +93,8 @@ const DOMStuff = (() => {
     try {
       weatherData = await HitAPI.getWeatherByLocation(location);
       renderData(true);
+      const backgroundImageUrl = Utils.switchBackground(weatherData);
+      document.body.style.backgroundImage = `url(${backgroundImageUrl})`;
     } catch (error) {
       console.error("Error occurred during weather retrieval:", error);
     }
@@ -106,9 +109,10 @@ const DOMStuff = (() => {
     });
 
     toggleButton.addEventListener("click", () => {
-      useCelsius = !useCelsius; // Toggle the unit preference
-      const useFeelsLikeCelsius = useCelsius; // Use the same unit preference for feels-like value
-      renderData(useFeelsLikeCelsius); // Render data with updated unit preference
+      useCelsiusTemp = !useCelsiusTemp;
+      useCelsiusFeelsLike = !useCelsiusFeelsLike;
+      renderData();
+      toggleButton.textContent = useCelsiusTemp ? "Celsius" : "Fahrenheit";
     });
   };
 

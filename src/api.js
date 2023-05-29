@@ -46,95 +46,42 @@ export const HitAPI = (() => {
 })();
 
 export const Utils = (() => {
-  // let isTemperatureFahrenheit = false;
-  // let isFeelsLikeFahrenheit = false;
-
-  // const toggleUnits = (temperature, feelsLike) => {
-  //   let convertedTemperature;
-  //   let convertedFeelsLike;
-
-  //   if (isTemperatureFahrenheit) {
-  //     convertedTemperature = (temperature - 32) * (5 / 9);
-  //   } else {
-  //     convertedTemperature = (temperature * 9) / 5 + 32;
-  //   }
-
-  //   if (isFeelsLikeFahrenheit) {
-  //     convertedFeelsLike = (feelsLike - 32) * (5 / 9);
-  //   } else {
-  //     convertedFeelsLike = (feelsLike * 9) / 5 + 32;
-  //   }
-
-  //   isTemperatureFahrenheit = !isTemperatureFahrenheit;
-  //   isFeelsLikeFahrenheit = !isFeelsLikeFahrenheit;
-
-  //   console.log("Converted temperature:", convertedTemperature);
-  //   console.log("Converted feels like:", convertedFeelsLike);
-
-  //   return {
-  //     convertedTemperature,
-  //     convertedFeelsLike,
-  //   };
-  // };
-
   const switchBackground = (finalData) => {
     const { isDay, weather } = finalData;
     let backgroundUrl;
 
     if (isDay) {
-      switch (weather) {
-        case "Sunny":
-          backgroundUrl = "sunny-day-background.jpg";
-          break;
-        case "Clear":
-          backgroundUrl = "clear-day-background.jpg";
-          break;
-        case "Cloud":
-        case "Partly cloudy":
-          backgroundUrl = "cloudy-day-background.jpg";
-          break;
-        case "Rain":
-          backgroundUrl = "rainy-day-background.jpg";
-          break;
-        case "Snow":
-          backgroundUrl = "snowy-day-background.jpg";
-          break;
-        case "Fog":
-          backgroundUrl = "foggy-day-background.jpg";
-          break;
-        default:
-          backgroundUrl = "default-day-background.jpg";
-          break;
+      if (weather.toLowerCase().includes("sun")) {
+        backgroundUrl = "images/sunny_day.jpg";
+      } else if (weather.toLowerCase().includes("cloud")) {
+        backgroundUrl = "images/cloudy_day.jpg";
+      } else if (weather.toLowerCase().includes("rain")) {
+        backgroundUrl = "images/rainy_day.jpg";
+      } else if (weather.toLowerCase().includes("snow")) {
+        backgroundUrl = "images/snowy_day.jpg";
+      } else if (weather.toLowerCase().includes("fog")) {
+        backgroundUrl = "images/foggy_day.jpg";
+      } else {
+        backgroundUrl = "images/default_day.jpg";
       }
+    } else if (weather.toLowerCase().includes("clear")) {
+      backgroundUrl = "images/clear_night.jpg";
+    } else if (weather.toLowerCase().includes("cloud")) {
+      backgroundUrl = "images/cloudy_night.jpg";
+    } else if (weather.toLowerCase().includes("rain")) {
+      backgroundUrl = "images/rainy_night.jpg";
+    } else if (weather.toLowerCase().includes("snow")) {
+      backgroundUrl = "images/snowy_night.jpg";
+    } else if (weather.toLowerCase().includes("fog")) {
+      backgroundUrl = "images/foggy_night.jpg";
     } else {
-      switch (weather) {
-        case "Clear":
-          backgroundUrl = "clear-night-background.jpg";
-          break;
-        case "Cloud":
-        case "Partly cloudy":
-          backgroundUrl = "cloudy-night-background.jpg";
-          break;
-        case "Rain":
-          backgroundUrl = "rainy-night-background.jpg";
-          break;
-        case "Snow":
-          backgroundUrl = "snowy-night-background.jpg";
-          break;
-        case "Fog":
-          backgroundUrl = "foggy-night-background.jpg";
-          break;
-        default:
-          backgroundUrl = "default-night-background.jpg";
-          break;
-      }
+      backgroundUrl = "images/default_night.jpg";
     }
-
     console.log("Background URL:", backgroundUrl);
+    return backgroundUrl;
   };
 
   return {
-    // toggleUnits,
     switchBackground,
   };
 })();

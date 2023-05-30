@@ -10,36 +10,55 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: top;
-    height: 100vh;
+    min-height: 100vh;
     font-family: 'Ubuntu', sans-serif;
     color: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#appContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FFF;
+    border-radius: 5px;
+    box-shadow: 0 0 .9rem #FFF;
+    min-height: 90vh;
+    width: 90vw;
+    max-width: 1200px;
 }
+
+/* ======================================== HEADER ======================================== */
 
 header {
     width: 100%;
     border-bottom: 2px solid #FFF;
     text-align: center;
     font-size: 2.5rem;
-    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 .9rem #FFF;
+    text-shadow: 0 0 .5rem #FFF;
 }
 
+/* ========================================= MAIN ===========================================*/
 main {
+    flex: 1; /* Allow main to grow and fill the available vertical space */
     height: 100%;
     width: 100%;
     display: flex;
-    background: rgba(0, 0, 0, 0.5);
 }
 
+/* ======================= ASIDE  */
 main aside {
     width: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
     border-right: 2px solid #FFF;
+    box-shadow: 0 0 .3rem #FFF;
 }
 
 main aside button {
@@ -60,12 +79,14 @@ main aside #dataContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 20px;
+    margin: 20px;
     gap: 5px;
+    text-align: center;
 }
 
 main aside #dataContainer h2 {
     font-size: 2.5rem;
+    text-shadow: 0 0 .2rem #FFF;
 }
 
 main aside #dataContainer p {
@@ -76,6 +97,8 @@ main aside #dataContainer img {
     width: 80px;
     height: 80px;
 }
+
+/* ======================= SEARCHCONTAINER  */
 
 main #searchContainer {
     width: 70%;
@@ -155,6 +178,8 @@ main #searchContainer #gifContainer img {
     box-shadow: 0 0 .5rem #FFF;
 }
 
+/* ======================================== FOOTER ========================================== */
+
 footer {
     width: 100%;
     display: flex;
@@ -162,7 +187,8 @@ footer {
     border-top: 2px solid #FFF;
     text-align: center;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 .9rem #FFF;
+    text-shadow: 0 0 .3rem #FFF;
 }
 
 footer a {
@@ -182,4 +208,84 @@ footer a:nth-child(2) {
 
 footer a:nth-child(3) {
     font-size: 1rem;
+}
+
+/* MEDIA QUERIES  */
+@media (max-width: 700px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    #appContainer {
+        width: 100%;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    header {
+        font-size: 2rem;
+    }
+
+    main {
+        flex-direction: column;
+    }
+
+    main #searchContainer {
+        order: 0;
+        width: auto;
+        border-bottom: 2px solid #FFF;
+    }
+
+    main #searchContainer #gifContainer {
+        margin-bottom: 25px;
+    }
+    
+    main #searchContainer #gifContainer img {
+        width: 300px;
+        height: 300px;
+        
+    }
+
+    main aside {
+        order: 1;
+        width: auto;
+        border-right: none;
+    }
+}
+
+@media (max-width: 400px) {
+    header {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    #searchLocation {
+        width: 200px;
+    }
+
+    main #searchContainer #gifContainer #weatherGif {
+        width: 250px;
+        height: 250px;
+    }
+
+    main aside #dataContainer {
+        margin-bottom: 0px;
+    }
+
+    main aside #dataContainer h2 {
+        font-size: 1.5rem;
+    }
+
+    footer a {
+        font-size: 1.2rem;
+    }
+    
+    footer a:nth-child(2) {
+        font-size: .8rem;
+    }
+    
+    footer a:nth-child(3) {
+        font-size: .8rem;
+    }
 }

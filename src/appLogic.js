@@ -1,11 +1,19 @@
 console.log("this seem to be working (appLogic.js)");
 
 export const WeatherAPI = (() => {
+  const isDayTime = (localTime) => {
+    const currentTime = new Date(localTime);
+    const currentHour = currentTime.getHours();
+    return currentHour >= 4 && currentHour < 20;
+  };
+
   const processData = (data) => {
+    const localTime = data.location.localtime;
+    const isDay = isDayTime(localTime);
+
     const processedData = {
-      // allData: data,
       city: data.location.name,
-      localTime: data.location.localtime,
+      localTime,
       weatherIcon: data.current.condition.icon,
       weather: data.current.condition.text,
       temperatureC: data.current.temp_c,
@@ -16,7 +24,7 @@ export const WeatherAPI = (() => {
       windSpeed: data.current.wind_kph,
       windDirection: data.current.wind_dir,
       visibility: data.current.vis_km,
-      isDay: data.current.is_day === 1,
+      isDay,
     };
     return processedData;
   };
@@ -115,7 +123,7 @@ export const Utils = (() => {
 
     if (isDay) {
       if (weather.toLowerCase().includes("sun")) {
-        gifId = "3cB7aOM6347PW";
+        gifId = "KZkiw30m1vgjZr6L3a";
       } else if (weather.toLowerCase().includes("cloud")) {
         gifId = "l0HlQdk8kI9KIOjBe";
       } else if (weather.toLowerCase().includes("rain")) {

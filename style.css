@@ -106,13 +106,12 @@ main #searchContainer {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    margin-top: 30px;
 }
 
 main #searchContainer #searchField {
-    order: 0; /* Move searchField to the top */
     display: flex;
     align-items: center;
-    margin: 25px;
 }
 
 main #searchContainer #searchField input {
@@ -162,12 +161,9 @@ main #searchContainer #searchField button:active {
 }
   
 main #searchContainer #gifContainer {
-    order: 1;
+    margin-top: 60px;
+    margin-bottom: 20px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-grow: 1;  /* Expand to fill remaining space */
 }
 
 main #searchContainer #gifContainer img {
@@ -238,13 +234,13 @@ footer a:nth-child(3) {
     }
 
     main #searchContainer #gifContainer {
+        margin-top: 25px;
         margin-bottom: 25px;
     }
     
     main #searchContainer #gifContainer img {
         width: 300px;
         height: 300px;
-        
     }
 
     main aside {

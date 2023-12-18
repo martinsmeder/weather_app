@@ -4,12 +4,6 @@
 
 Live demo: https://martinsmeder.github.io/weather_app/
 
-A browser based weather app powered by GiphyAPI, weatherAPI and webpack.
+A browser based weather app powered by GiphyAPI and weatherAPI.
 
-Some things I've learned:
 
-- How to manipulate and render data from APIs
-- How to perform asynchronous operations using async/await syntax
-- How to enable multi-file-debugging via source maps in webpack
-- How to setup multiple entry points in webpack
-- How to separate DOM-rendering and app-flow into different modules/objects
